@@ -31,6 +31,20 @@ class _MainContainerState extends State<MainContainer> {
     "Utilizzare #2:"
   ];
 
+  bool imagesPreloaded = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Preload images only once
+    if (!imagesPreloaded) {
+      precacheImage(AssetImage("assets/pasta.png"), context);
+      precacheImage(AssetImage("assets/cake.png"), context);
+      imagesPreloaded = true;
+    }
+  }
+
   void switchType() {
     setState(() {
       isMeal = !isMeal;
@@ -50,7 +64,7 @@ class _MainContainerState extends State<MainContainer> {
     if (input1 != 0) {
       double result = (input2 * input3) / input1;
       setState(() {
-        resultText = result.toString();
+        resultText = result.round().toString();
       });
     } else {
       setState(() {
@@ -73,7 +87,7 @@ class _MainContainerState extends State<MainContainer> {
                 isMeal ? "assets/pasta.png" : "assets/cake.png",
                 width: 150,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -81,7 +95,7 @@ class _MainContainerState extends State<MainContainer> {
                     "Pasticceria",
                     color: !isMeal ? Colors.black : Colors.grey,
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   Switch(
                     value: isMeal,
                     onChanged: (bool value) => switchType(),
@@ -89,23 +103,23 @@ class _MainContainerState extends State<MainContainer> {
                     inactiveThumbColor: Colors.blue,
                     inactiveTrackColor: Colors.blue[200],
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   CustomText(
                     "Ristorante",
                     color: isMeal ? Colors.black : Colors.grey,
                   ),
                 ],
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               buildInputField(isMeal ? list_isMeal[0] : list_isNotMeal[0],
                   input1Controller),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildInputField(isMeal ? list_isMeal[1] : list_isNotMeal[1],
                   input2Controller),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildInputField(isMeal ? list_isMeal[2] : list_isNotMeal[2],
                   input3Controller),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -113,7 +127,7 @@ class _MainContainerState extends State<MainContainer> {
                   CustomText(resultText),
                 ],
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               ElevatedButton(
                 onPressed: computeResult,
                 child: Text(
@@ -144,7 +158,7 @@ class _MainContainerState extends State<MainContainer> {
               child: TextField(
                 controller: controller,
                 keyboardType: TextInputType.number,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -160,7 +174,7 @@ class _MainContainerState extends State<MainContainer> {
     return Text(
       text,
       style: TextStyle(
-        fontSize: 20,
+        fontSize: 36,
         fontWeight: FontWeight.bold,
         color: color,
       ),
