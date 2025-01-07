@@ -33,6 +33,10 @@ class _MainContainerState extends State<MainContainer> {
 
   bool imagesPreloaded = false;
 
+  final FocusNode input1FocusNode = FocusNode();
+  final FocusNode input2FocusNode = FocusNode();
+  final FocusNode input3FocusNode = FocusNode();
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -112,13 +116,13 @@ class _MainContainerState extends State<MainContainer> {
               ),
               const SizedBox(height: 40),
               buildInputField(isMeal ? list_isMeal[0] : list_isNotMeal[0],
-                  input1Controller),
+                  input1Controller, input1FocusNode, input2FocusNode),
               const SizedBox(height: 20),
               buildInputField(isMeal ? list_isMeal[1] : list_isNotMeal[1],
-                  input2Controller),
+                  input2Controller, input2FocusNode, input3FocusNode),
               const SizedBox(height: 20),
               buildInputField(isMeal ? list_isMeal[2] : list_isNotMeal[2],
-                  input3Controller),
+                  input3Controller, input3FocusNode, null),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,7 +137,7 @@ class _MainContainerState extends State<MainContainer> {
                 child: Text(
                   "Calcola",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: isMeal ? Colors.green : Colors.blue,
                   ),
@@ -146,7 +150,8 @@ class _MainContainerState extends State<MainContainer> {
     );
   }
 
-  Widget buildInputField(String label, TextEditingController controller) {
+  Widget buildInputField(String label, TextEditingController controller,
+      FocusNode currentFocusNode, FocusNode? nextFocusNode) {
     return Column(
       children: [
         Row(
@@ -157,11 +162,26 @@ class _MainContainerState extends State<MainContainer> {
               width: 100,
               child: TextField(
                 controller: controller,
+                focusNode: currentFocusNode,
                 keyboardType: TextInputType.number,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
+                decoration: InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(
+                      color: isMeal ? Colors.green : Colors.blue,
+                    ),
+                  ),
+                ),
+                onSubmitted: (value) {
+                  if (nextFocusNode != null) {
+                    FocusScope.of(context).requestFocus(nextFocusNode);
+                  } else {
+                    computeResult();
+                  }
+                },
               ),
             ),
           ],
@@ -174,7 +194,7 @@ class _MainContainerState extends State<MainContainer> {
     return Text(
       text,
       style: TextStyle(
-        fontSize: 36,
+        fontSize: 14,
         fontWeight: FontWeight.bold,
         color: color,
       ),
